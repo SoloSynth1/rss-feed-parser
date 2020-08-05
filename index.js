@@ -1,10 +1,13 @@
 const express = require('express');
 
+const pubsub = require("./pubsub");
+const rss = require("./rss");
+
 const app = express();
 
 app.use(express.json());
 
-app.post('/', (req, res) => {
+app.post('/', async (req, res) => {
     console.log(req.body);
     if (!req.body) {
         const msg = 'no Pub/Sub message received';
@@ -22,12 +25,14 @@ app.post('/', (req, res) => {
     const pubSubMessage = req.body.message;
 
     console.log(pubSubMessage);
-
-    const name = pubSubMessage.data
+    const jsonString = pubSubMessage.data
         ? Buffer.from(pubSubMessage.data, 'base64').toString().trim()
-        : 'World';
+        : '{}';
+    const obj = pubsub.parsePubsub(jsonString);
 
-    console.log(`Hello ${name}!`);
+    const publishableItems = await rss.parse(obj);
+    pubsub.publish(publishableItems, obj.spaces);
+
     res.status(204).send();
 });
 
