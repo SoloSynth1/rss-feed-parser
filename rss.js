@@ -15,15 +15,17 @@ module.exports.parse = async (obj) => {
         }
     };
 
-    let feed = getFeed(feedUrl);
+    let feed = await getFeed(feedUrl);
 
     let publishableItems = [];
 
-    feed.items.forEach(item => {
-        let pubTime = new Date(item.isoDate).valueOf() / 1000;  // converting milliseconds to seconds for comparison
-        if (pubTime > onlyFetchAfter) {
-            publishableItems.push(item);
-        }
-    });
+    if (feed && feed.length) {
+        feed.items.forEach(item => {
+            let pubTime = new Date(item.isoDate).valueOf() / 1000;  // converting milliseconds to seconds for comparison
+            if (pubTime > onlyFetchAfter) {
+                publishableItems.push(item);
+            }
+        });
+    }
     return publishableItems;
 };
