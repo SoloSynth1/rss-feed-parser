@@ -19,7 +19,7 @@ module.exports.publish = (publishableItems, spaceList) => {
                 name: spaceObj.feedName,
             };
             let data = JSON.stringify(message);
-            publishMessage(data);
+            publishMessage(data).catch(console.error);
         });
     });
 };
@@ -32,5 +32,3 @@ async function publishMessage(data) {
     const messageId = await pubSubClient.topic(topicName).publish(dataBuffer);
     console.log(`Message ${messageId} published.`);
 }
-
-publishMessage().catch(console.error);

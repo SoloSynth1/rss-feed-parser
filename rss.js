@@ -13,7 +13,7 @@ module.exports.parse = async (obj) => {
             console.log(`error occurred during fetching: ${e}`)
             return [];
         }
-    }
+    };
 
     let feed = getFeed(feedUrl);
 
