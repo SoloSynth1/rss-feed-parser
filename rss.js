@@ -6,7 +6,16 @@ module.exports.parse = async (obj) => {
     const feedUrl = obj.feed;
     const onlyFetchAfter = obj.onlyFetchAfter;
 
-    let feed = await parser.parseURL(feedUrl);
+    let getFeed = async (feedUrl) => {
+        try {
+            return await parser.parseURL(feedUrl);
+        } catch (e) {
+            console.log(`error occurred during fetching: ${e}`)
+            return [];
+        }
+    }
+
+    let feed = getFeed(feedUrl);
 
     let publishableItems = [];
 
