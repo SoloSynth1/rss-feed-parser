@@ -24,11 +24,13 @@ app.post('/', async (req, res) => {
 
     const pubSubMessage = req.body.message;
 
-    console.log(pubSubMessage);
     const jsonString = pubSubMessage.data
         ? Buffer.from(pubSubMessage.data, 'base64').toString().trim()
         : '{}';
+
     const obj = pubsub.parsePubsub(jsonString);
+    console.log("\ndecoded message data:");
+    console.log(obj);
 
     const publishableItems = await rss.parse(obj);
     pubsub.publish(publishableItems, obj.spaces);
