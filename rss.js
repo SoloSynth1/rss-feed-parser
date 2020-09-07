@@ -5,15 +5,16 @@ module.exports.parse = async (obj) => {
 
     const feedUrl = obj.feed;
     const onlyFetchAfter = obj.onlyFetchAfter;
+    const onlyFetchBefore = new Date().valueOf() / 1000;
 
     let feed = await getFeed(feedUrl);
 
     let publishableItems = [];
 
-    if (feed && feed.items.length) {
+    if (feed && feed.hasOwnProperty('items') && Array.isArray(feed.items)) {
         feed.items.forEach(item => {
             let pubTime = new Date(item.isoDate).valueOf() / 1000;  // converting milliseconds to seconds for comparison
-            if (pubTime > onlyFetchAfter) {
+            if (pubTime > onlyFetchAfter && pubTime <= onlyFetchBefore) {
                 publishableItems.push(item);
             }
         });
@@ -29,3 +30,5 @@ async function getFeed(feedUrl) {
         return [];
     }
 }
+
+console.log();
