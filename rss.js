@@ -30,5 +30,3 @@ async function getFeed(feedUrl) {
         return [];
     }
 }
-
-console.log();
